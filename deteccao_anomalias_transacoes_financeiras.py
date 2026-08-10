@@ -10,6 +10,6 @@ df = pd.read_csv(url)
 proporcoes = df["Class"].value_counts(normalize=True)
 print(proporcoes)
 
-df["Amount_log"] = np.log1p(df["Amount"]) #usamos o log para diminuir os valores da coluna
+df["Amount_log"] = np.log1p(df["Amount"])
 
 df["Amount_scaled"] = scaler.fir_transform(df["Amount"])
