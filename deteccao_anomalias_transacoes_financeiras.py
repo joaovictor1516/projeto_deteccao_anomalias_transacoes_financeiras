@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, roc_curve, roc_auc_score
+from sklearn.metrics import precision_recall_curve, classification_report, roc_curve, roc_auc_score
 
 scaler = StandardScaler()
 
@@ -41,3 +41,11 @@ plt.ylabel("True Positive Rate")
 plt.show()
 
 print("AUC: ", roc_auc_score(y_test, y_probs))
+
+precision, recall, _ = precision_recall_curve(y_test, y_probs)
+
+plt.plot(recall, precision)
+plt.title("Precision X Recall Curve")
+plt.xlabel("Recall")
+plt.ylabel("Precision")
+plt.show()
