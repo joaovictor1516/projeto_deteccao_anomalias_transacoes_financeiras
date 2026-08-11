@@ -11,12 +11,17 @@ scaler = StandardScaler()
 url = "https://storage.googleapis.com/download.tensorflow.org/data/creditcard.csv"
 df = pd.read_csv(url)
 
-df["Amount_log"] = np.log1p(df["Amount"])
+fraudes = df[df["Class"] == 1]
+normais = df[df["Class"] == 0].sample(len(fraudes), random_state=42)
 
-df["Amount_scaled"] = scaler.fit_transform(df[["Amount"]])
+df_under = pd.concat([fraudes, normais])
 
-x = df.drop("Class", axis=1)
-y = df["Class"]
+df_under["Amount_log"] = np.log1p(df_under["Amount"])
+
+df_under["Amount_scaled"] = scaler.fit_transform(df_under[["Amount"]])
+
+x = df_under.drop("Class", axis=1)
+y = df_under["Class"]
 
 x_train, x_test, y_train, y_test = train_test_split(
     x, y, stratify=y, test_size=0.3, random_state=42
