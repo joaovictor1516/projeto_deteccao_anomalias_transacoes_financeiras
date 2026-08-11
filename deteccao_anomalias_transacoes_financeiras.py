@@ -12,4 +12,4 @@ print(proporcoes)
 
 df["Amount_log"] = np.log1p(df["Amount"])
 
-df["Amount_scaled"] = scaler.fit_transform(df["Amount"])
+df["Amount_scaled"] = scaler.fit_transform(df[["Amount"]])
