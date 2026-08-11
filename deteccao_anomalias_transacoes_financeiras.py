@@ -22,7 +22,7 @@ x_train, x_test, y_train, y_test = train_test_split(
     x, y, stratify=y, test_size=0.3, random_state=42
 )
 
-model = LogisticRegression(max_iter=1000)
+model = LogisticRegression(max_iter=10000)
 
 model.fit(x_train, y_train)
 
