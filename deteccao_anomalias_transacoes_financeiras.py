@@ -1,9 +1,10 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import classification_report
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report, roc_curve, roc_auc_score
 
 scaler = StandardScaler()
 
@@ -28,3 +29,15 @@ model.fit(x_train, y_train)
 y_predict = model.predict(x_test)
 
 print(classification_report(y_test, y_predict))
+
+y_probs = model.predict_proba(x_test)[:,1]
+
+ftp, rtp, _ = roc_curve(y_test, y_probs)
+
+plt.plot(ftp, rtp)
+plt.title("Roc Curve")
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.show()
+
+print("AUC: ", roc_auc_score(y_test, y_probs))
