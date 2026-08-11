@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 
@@ -8,9 +9,6 @@ scaler = StandardScaler()
 
 url = "https://storage.googleapis.com/download.tensorflow.org/data/creditcard.csv"
 df = pd.read_csv(url)
-
-proporcoes = df["Class"].value_counts(normalize=True)
-print(proporcoes)
 
 df["Amount_log"] = np.log1p(df["Amount"])
 
@@ -28,3 +26,5 @@ model = LogisticRegression(max_iter=1000)
 model.fit(x_train, y_train)
 
 y_predict = model.predict(x_test)
+
+print(classification_report(y_test, y_predict))
