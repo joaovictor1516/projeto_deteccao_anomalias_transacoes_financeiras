@@ -23,13 +23,13 @@ x_train, x_test, y_train, y_test = train_test_split(
     x, y, stratify=y, test_size=0.3, random_state=42
 )
 
+x_train["Amount_scaled"] = scaler.fit_transform(x_train[["Amount"]])
+x_test["Amount_scaled"] = scaler.fit_transform(x_test[["Amount"]])
+
 x_train_over, y_train_over = smote.fit_resample(
     x_train,
     y_train
 )
-
-x_train["Amount_scaled"] = scaler.fit_transform(x_train[["Amount"]])
-x_test["Amount_scaled"] = scaler.fit_transform(x_test[["Amount"]])
 
 # Logistic Regression:
 model = LogisticRegression(max_iter=10000)
