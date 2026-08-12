@@ -14,14 +14,16 @@ df = pd.read_csv(url)
 
 df["Amount_log"] = np.log1p(df["Amount"])
 
-df["Amount_scaled"] = scaler.fit_transform(df[["Amount"]])
-
 x = df.drop("Class", axis=1)
 y = df["Class"]
 
 x_train, x_test, y_train, y_test = train_test_split(
     x, y, stratify=y, test_size=0.3, random_state=42
 )
+
+x_train["Amount_scaled"] = scaler.fit_transform(x_train[["Amount"]])
+
+x_test["Amount_scaled"] = scaler.fit_transform(x_test[["Amount"]])
 
 # Logic Regression:
 model = LogisticRegression(max_iter=10000)
