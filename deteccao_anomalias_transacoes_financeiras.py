@@ -20,15 +20,18 @@ df["Amount_scaled"] = scaler.fit_transform(df[["Amount"]])
 x = df.drop("Class", axis=1)
 y = df["Class"]
 
-x_res, y_res = smote.fit_resample(x, y)
-
 x_train, x_test, y_train, y_test = train_test_split(
-    x_res, y_res, stratify=y_res, test_size=0.3, random_state=42
+    x, y, stratify=y, test_size=0.3, random_state=42
+)
+
+x_train_over, y_train_over = smote.fit_resample(
+    x_train,
+    y_train
 )
 
 model = LogisticRegression(max_iter=10000)
 
-model.fit(x_train, y_train)
+model.fit(x_train_over, y_train_over)
 
 y_predict = model.predict(x_test)
 
