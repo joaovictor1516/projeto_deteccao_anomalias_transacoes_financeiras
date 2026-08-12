@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import precision_recall_curve, classification_report, roc_curve, roc_auc_score
@@ -22,6 +23,7 @@ x_train, x_test, y_train, y_test = train_test_split(
     x, y, stratify=y, test_size=0.3, random_state=42
 )
 
+# Logic Regression:
 model = LogisticRegression(max_iter=10000)
 
 model.fit(x_train, y_train)
@@ -32,9 +34,9 @@ print(classification_report(y_test, y_predict))
 
 y_probs = model.predict_proba(x_test)[:,1]
 
-ftp, rtp, _ = roc_curve(y_test, y_probs)
+fpr, tpr, _ = roc_curve(y_test, y_probs)
 
-plt.plot(ftp, rtp)
+plt.plot(fpr, tpr)
 plt.title("Roc Curve")
 plt.xlabel("False Positive Rate")
 plt.ylabel("True Positive Rate")
@@ -49,3 +51,20 @@ plt.title("Precision X Recall Curve")
 plt.xlabel("Recall")
 plt.ylabel("Precision")
 plt.show()
+
+# Random Forest:
+rf = RandomForestClassifier(
+    n_estimators=50,
+    max_depth=10,
+    class_weight="balanced",
+    n_jobs=1,
+    random_state=42
+)
+
+rf.fit(x_train, y_train)
+
+y_predict_rf = rf.predict(x_test)
+
+print(classification_report(y_test, y_predict_rf))
+
+print("AUC:", roc_auc_score(y_test, y_predict_rf))
