@@ -16,8 +16,6 @@ df = pd.read_csv(url)
 
 df["Amount_log"] = np.log1p(df["Amount"])
 
-df["Amount_scaled"] = scaler.fit_transform(df[["Amount"]])
-
 x = df.drop("Class", axis=1)
 y = df["Class"]
 
@@ -29,6 +27,9 @@ x_train_over, y_train_over = smote.fit_resample(
     x_train,
     y_train
 )
+
+x_train["Amount_scaled"] = scaler.fit_transform(x_train[["Amount"]])
+x_test["Amount_scaled"] = scaler.fit_transform(x_test[["Amount"]])
 
 # Logistic Regression:
 model = LogisticRegression(max_iter=10000)
