@@ -67,4 +67,6 @@ y_predict_rf = rf.predict(x_test)
 
 print(classification_report(y_test, y_predict_rf))
 
-print("AUC:", roc_auc_score(y_test, y_predict_rf))
+y_probs_rf = rf.predict_proba(x_test)[:,1]
+
+print("AUC:", roc_auc_score(y_test, y_probs_rf))
