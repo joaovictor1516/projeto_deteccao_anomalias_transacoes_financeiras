@@ -56,7 +56,6 @@ plt.show()
 rf = RandomForestClassifier(
     n_estimators=50,
     max_depth=10,
-    class_weight="balanced",
     n_jobs=1,
     random_state=42
 )
