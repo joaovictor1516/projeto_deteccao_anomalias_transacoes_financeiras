@@ -27,10 +27,15 @@ x_train["Amount_scaled"] = scaler.fit_transform(x_train[["Amount"]])
 
 x_test["Amount_scaled"] = scaler.fit_transform(x_test[["Amount"]])
 
-# Logic Regression:
+x_train_over, y_train_over = smote.fit_resample(
+    x_train,
+    y_train
+)
+
+# Logistic Regression:
 model = LogisticRegression(max_iter=10000)
 
-model.fit(x_train, y_train)
+model.fit(x_train_over, y_train_over)
 
 y_predict = model.predict(x_test)
 
@@ -64,7 +69,7 @@ rf = RandomForestClassifier(
     random_state=42
 )
 
-rf.fit(x_train, y_train)
+rf.fit(x_train_over, y_train_over)
 
 y_predict_rf = rf.predict(x_test)
 
