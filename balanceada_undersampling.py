@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from imblearn.over_sampling import SMOTE
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
@@ -9,7 +8,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import precision_recall_curve, classification_report, roc_curve, roc_auc_score
 
 scaler = StandardScaler()
-smote = SMOTE()
 
 url = "https://storage.googleapis.com/download.tensorflow.org/data/creditcard.csv"
 df = pd.read_csv(url)
@@ -24,18 +22,22 @@ x_train, x_test, y_train, y_test = train_test_split(
 )
 
 x_train["Amount_scaled"] = scaler.fit_transform(x_train[["Amount"]])
-
 x_test["Amount_scaled"] = scaler.fit_transform(x_test[["Amount"]])
 
-x_train_over, y_train_over = smote.fit_resample(
-    x_train,
-    y_train
-)
+train = pd.concat([x_train, y_train], axis=1)
+
+fraudes = train[train["Class"] == 1]
+normais = train[train["Class"] == 0].sample(len(fraudes), random_state=42)
+
+train_under = pd.concat([fraudes, normais])
+
+x_train_under = train_under.drop("Class", axis=1)
+y_train_under = train_under["Class"]
 
 # Logistic Regression:
 model = LogisticRegression(max_iter=10000)
 
-model.fit(x_train_over, y_train_over)
+model.fit(x_train_under, y_train_under)
 
 y_predict = model.predict(x_test)
 
@@ -43,9 +45,9 @@ print(classification_report(y_test, y_predict))
 
 y_probs = model.predict_proba(x_test)[:,1]
 
-fpr, tpr, _ = roc_curve(y_test, y_probs)
+ftp, rtp, _ = roc_curve(y_test, y_probs)
 
-plt.plot(fpr, tpr)
+plt.plot(ftp, rtp)
 plt.title("Roc Curve")
 plt.xlabel("False Positive Rate")
 plt.ylabel("True Positive Rate")
@@ -69,7 +71,7 @@ rf = RandomForestClassifier(
     random_state=42
 )
 
-rf.fit(x_train_over, y_train_over)
+rf.fit(x_train_under, y_train_under)
 
 y_predict_rf = rf.predict(x_test)
 
